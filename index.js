@@ -501,6 +501,41 @@ app.get("/api/v1/products", async (req, res) => {
   }
 });
 
+const readProductById = async (productId) => {
+  try {
+    const desiredProduct = await Product.findOne({ _id: productId });
+    console.log(`Here is the product with id ${productId}: ${desiredProduct}`);
+    return desiredProduct;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+app.get("/api/v1/products/:productId", async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const desiredProduct = await readProductById(productId);
+    desiredProduct
+      ? res
+          .status(200)
+          .send(JSON.stringify({ data: { product: desiredProduct } }))
+      : res.status(404).send(JSON.stringify({ message: "Product not found!" }));
+  } catch (error) {
+    let errorMessage = error.reason
+      .toString()
+      .startsWith("BSONError: input must be a 24 character hex string")
+      ? "Error: Invalid Product ID"
+      : "An error occurred while fetching the product!";
+
+    res.status(500).send(
+      JSON.stringify({
+        message: errorMessage,
+      })
+    );
+  }
+});
+
 app.listen(PORT, () => {
   console.log("Server started successfully on PORT", PORT);
 });
