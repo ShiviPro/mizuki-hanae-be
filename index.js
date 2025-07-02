@@ -488,7 +488,9 @@ app.get("/products", async (req, res) => {
     const allProducts = await readAllProducts();
 
     allProducts && allProducts.length > 0
-      ? res.status(200).send(JSON.stringify(allProducts))
+      ? res
+          .status(200)
+          .send(JSON.stringify({ data: { products: allProducts } }))
       : res.status(404).send(JSON.stringify({ message: "No product found!" }));
   } catch (error) {
     res.status(500).send(
