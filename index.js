@@ -483,7 +483,7 @@ const readAllProducts = async () => {
   }
 };
 
-app.get("/products", async (req, res) => {
+app.get("/api/v1/products", async (req, res) => {
   try {
     const allProducts = await readAllProducts();
 
